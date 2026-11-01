@@ -1,10 +1,8 @@
-FROM python:3.9.18-slim-bookworm
-
-
-WORKDIR /python-docker
-
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+FROM python:3.11-slim
+WORKDIR /app
+ENV PORT=5050
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-RUN ls
-CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+EXPOSE 5050
+CMD ["sh", "-c", "flask --app app run --host=0.0.0.0 --port=${PORT:-5050}"]
