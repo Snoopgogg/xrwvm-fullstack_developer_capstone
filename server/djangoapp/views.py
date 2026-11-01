@@ -1,65 +1,145 @@
-# Uncomment the required imports before adding the code
-
-# from django.shortcuts import render
-# from django.http import HttpResponseRedirect, HttpResponse
-# from django.contrib.auth.models import User
-# from django.shortcuts import get_object_or_404, render, redirect
-# from django.contrib.auth import logout
-# from django.contrib import messages
-# from datetime import datetime
-
-from django.http import JsonResponse
-from django.contrib.auth import login, authenticate
-import logging
 import json
+import logging
+
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.db import IntegrityError
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-# from .populate import initiate
 
+from .models import CarModel
+from .restapis import analyze_review_sentiments, get_request, post_review
 
-# Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
-# Create your views here.
+def _json_body(request):
+    try:
+        return json.loads(request.body.decode("utf-8") or "{}")
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return None
 
-# Create a `login_request` view to handle sign in request
+
 @csrf_exempt
 def login_user(request):
-    # Get username and password from request.POST dictionary
-    data = json.loads(request.body)
-    username = data['userName']
-    password = data['password']
-    # Try to check if provide credential can be authenticated
-    user = authenticate(username=username, password=password)
-    data = {"userName": username}
-    if user is not None:
-        # If user is valid, call login method to login current user
-        login(request, user)
-        data = {"userName": username, "status": "Authenticated"}
-    return JsonResponse(data)
+    if request.method != "POST":
+        return JsonResponse({"error": "Use POST"}, status=405)
+    data = _json_body(request)
+    if data is None:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
 
-# Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
+    username = data.get("userName") or data.get("username")
+    password = data.get("password")
+    user = authenticate(request, username=username, password=password)
+    if user is None:
+        return JsonResponse({"userName": username or "", "status": "Invalid credentials"}, status=401)
 
-# Create a `registration` view to handle sign up request
-# @csrf_exempt
-# def registration(request):
-# ...
+    login(request, user)
+    return JsonResponse({"userName": username, "status": "Authenticated"})
 
-# # Update the `get_dealerships` view to render the index page with
-# a list of dealerships
-# def get_dealerships(request):
-# ...
 
-# Create a `get_dealer_reviews` view to render the reviews of a dealer
-# def get_dealer_reviews(request,dealer_id):
-# ...
+def logout_user(request):
+    logout(request)
+    return JsonResponse({"userName": "", "status": "Logged out"})
 
-# Create a `get_dealer_details` view to render the dealer details
-# def get_dealer_details(request, dealer_id):
-# ...
 
-# Create a `add_review` view to submit a review
-# def add_review(request):
-# ...
+@csrf_exempt
+def registration(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Use POST"}, status=405)
+    data = _json_body(request)
+    if data is None:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    username = (data.get("userName") or data.get("username") or "").strip()
+    password = data.get("password") or ""
+    first_name = (data.get("firstName") or data.get("first_name") or "").strip()
+    last_name = (data.get("lastName") or data.get("last_name") or "").strip()
+    email = (data.get("email") or "").strip()
+
+    if not all([username, password, first_name, last_name, email]):
+        return JsonResponse({"message": "All five fields are required"}, status=400)
+    if User.objects.filter(username=username).exists():
+        return JsonResponse({"message": "Username already exists"}, status=409)
+
+    try:
+        User.objects.create_user(
+            username=username,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+        )
+    except IntegrityError:
+        return JsonResponse({"message": "Could not create this account"}, status=400)
+
+    return JsonResponse({"status": 200, "message": "User successfully registered. You can now log in."})
+
+
+def get_dealerships(request):
+    try:
+        dealers = get_request("fetchDealers")
+        return JsonResponse({"status": 200, "dealers": dealers})
+    except requests.RequestException as exc:
+        logger.exception("Unable to retrieve dealerships")
+        return JsonResponse({"status": 503, "error": str(exc), "dealers": []}, status=503)
+
+
+def get_dealers_by_state(request, state):
+    try:
+        dealers = get_request(f"fetchDealers/{state}")
+        return JsonResponse({"status": 200, "dealers": dealers})
+    except Exception as exc:
+        logger.exception("Unable to retrieve dealerships by state")
+        return JsonResponse({"status": 503, "error": str(exc), "dealers": []}, status=503)
+
+
+def get_dealer_details(request, dealer_id):
+    try:
+        dealers = get_request(f"fetchDealer/{dealer_id}")
+        return JsonResponse({"status": 200, "dealer": dealers})
+    except Exception as exc:
+        logger.exception("Unable to retrieve dealer details")
+        return JsonResponse({"status": 503, "error": str(exc), "dealer": []}, status=503)
+
+
+def get_dealer_reviews(request, dealer_id):
+    try:
+        reviews = get_request(f"fetchReviews/dealer/{dealer_id}")
+        for review in reviews:
+            try:
+                review["sentiment"] = analyze_review_sentiments(review.get("review", "")).get("sentiment", "neutral")
+            except Exception:
+                review["sentiment"] = "neutral"
+        return JsonResponse({"status": 200, "reviews": reviews})
+    except Exception as exc:
+        logger.exception("Unable to retrieve dealer reviews")
+        return JsonResponse({"status": 503, "error": str(exc), "reviews": []}, status=503)
+
+
+@csrf_exempt
+def add_review(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Use POST"}, status=405)
+    data = _json_body(request)
+    if data is None:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    required = ["name", "dealership", "review", "purchase", "purchase_date", "car_make", "car_model", "car_year"]
+    missing = [key for key in required if key not in data]
+    if missing:
+        return JsonResponse({"status": 400, "error": "Missing fields: " + ", ".join(missing)}, status=400)
+    try:
+        saved = post_review(data)
+        return JsonResponse({"status": 200, "message": "Review added successfully", "review": saved})
+    except Exception as exc:
+        logger.exception("Unable to save review")
+        return JsonResponse({"status": 502, "error": str(exc)}, status=502)
+
+
+def get_cars(request):
+    cars = CarModel.objects.select_related("make").all()
+    car_models = [
+        {"CarMake": car.make.name, "CarModel": car.name}
+        for car in cars
+    ]
+    return JsonResponse({"status": 200, "CarModels": car_models})
