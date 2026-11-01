@@ -1,9 +1,9 @@
 GitHub Actions — Car Dealership Capstone CI
 Repository: Snoopgogg/xrwvm-fullstack_developer_capstone
 Branch: main
-Run ID: 41357429529
-Run URL: https://github.com/Snoopgogg/xrwvm-fullstack_developer_capstone/actions/runs/41357429529
-Commit: 4b84791da44e66641c38b3b43b7f475f419119d3
+Workflow run ID: 41358137398
+Workflow run URL: https://github.com/Snoopgogg/xrwvm-fullstack_developer_capstone/actions/runs/41358137398
+Commit: 806b2a9bd264149bcbbce4ef1079e9d38a9840cd
 Overall conclusion: SUCCESS
 
 JOB 1: Lint Python Files — SUCCESS
@@ -19,9 +19,9 @@ JOB 2: Lint JavaScript Files — SUCCESS
   1. Set up job — success
   2. Checkout code — success
   3. Set up Node.js 20 — success
-  4. Install JavaScript dependencies: npm install --no-audit --no-fund — success
-  5. Run Linter: CI=false npm run build — success
-  6. Validate Node.js API syntax (node --check app.js and model files) — success
+  4. Install JavaScript dependencies — success
+  5. Run Linter / production build: CI=false npm run build — success
+  6. Validate Node.js API syntax — success
   7. Post Run Linter — success
   8. Complete job — success
 
@@ -32,7 +32,7 @@ JOB 3: Django Application Checks — SUCCESS
   4. Install Django dependencies — success
   5. Run Django checks — success
      Output: System check identified no issues (0 silenced).
-  6. Apply database migrations (with sync for project models) — success
+  6. Apply database migrations — success
   7. Populate the car catalogue — success
   8. Complete job — success
 
