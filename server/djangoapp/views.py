@@ -141,10 +141,14 @@ def add_review(request):
 
 def get_cars(request):
     cars = CarModel.objects.select_related("make").all()
-    car_models = [
-        {"CarMake": car.make.name, "CarModel": car.name}
-        for car in cars
-    ]
+    car_models = []
+    seen_models = set()
+    for car in cars:
+        key = (car.make.name, car.name)
+        if key not in seen_models:
+            seen_models.add(key)
+            car_models.append({"CarMake": car.make.name, "CarModel": car.name})
+
     if not car_models:
         data_file = (
             Path(__file__).resolve().parents[1]
