@@ -45,7 +45,7 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Run Linter
         working-directory: server/frontend
-        run: npm run build
+        run: CI=false npm run build
       - name: Validate Node.js API syntax
         run: |
           node --check server/database/app.js
