@@ -1,68 +1,80 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <!-- Link the style sheet here -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About Us | Cars Dealership</title>
+  <link rel="stylesheet" href="/static/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    body{background:#f5f7fa;color:#263238}
+    .site-nav{background:#063b4c;min-height:76px}
+    .site-nav .navbar-brand,.site-nav .nav-link{color:#fff!important}
+    .site-nav .nav-link.active,.site-nav .nav-link:hover{color:#63e6df!important}
+    .about-wrap{max-width:1120px;margin:42px auto;padding:0 18px}
+    .about-hero{background:linear-gradient(120deg,#063b4c,#087e8b);color:#fff;padding:36px;border-radius:16px;margin-bottom:28px}
+    .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
+    .team-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 5px 22px rgba(0,0,0,.08)}
+    .team-card img{width:100%;height:210px;object-fit:cover;display:block}
+    .team-card .card-body{padding:22px}
+    .team-card .role{color:#087e8b;font-weight:700}
+    .about-copy{margin-top:26px;background:#fff;padding:26px;border-radius:14px;box-shadow:0 5px 22px rgba(0,0,0,.06)}
+  </style>
 </head>
-<div>
-  <nav class="navbar navbar-expand-lg navbar-light" style="background-color:darkturquoise; height: 1in;">
-    <div class="container-fluid">
-      <h2 style="padding-right: 5%;">Dealerships</h2>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarText">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" style="font-size: larger;" aria-current="page" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" style="font-size: larger;" href="/about">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" style="font-size: larger;" href="/contact">Contact Us</a>
-          </li>
+<body>
+  <nav class="navbar navbar-expand-lg site-nav">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="/">Cars Dealership</a>
+      <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/about">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact">Contact Us</a></li>
         </ul>
       </div>
     </div>
   </nav>
-  
-    <div class="card" style="width: 80%;margin: auto; margin-top:5%;">
-      <div class="banner" name="about-header">
-      <!-- Insert header information here -->
-      </div>
-      <div style="display: flex;flex-direction: row; margin:auto">
-      <div class="card" style="width: 30%;">
-        <img class="card-img-top" src="/static/person.png" alt="Card image">
+  <main class="about-wrap">
+    <section class="about-hero">
+      <h1 class="display-6 fw-bold">About Cars Dealership</h1>
+      <p class="lead mb-0">We connect drivers with trusted dealerships and make it easier to explore vehicles, compare locations, and share honest ownership experiences.</p>
+    </section>
+    <h2 class="h3 mb-3">Meet our team</h2>
+    <section class="team-grid">
+      <article class="team-card">
+        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=85" alt="Portrait of Daniel Carter">
         <div class="card-body">
-          <p class="title">Person1</p>
-          <p>Person1 Title</p>
-          <p class="card-text">Some text that explains the person1 in about 2 short sentences</p>
-          <p>person1@example.com</p>
+          <h3 class="h5 mb-1">Daniel Carter</h3>
+          <p class="role mb-2">Chief Executive Officer</p>
+          <p>Daniel leads the dealership network and sets the customer-first strategy. He brings more than 15 years of automotive retail and operations experience.</p>
+          <a href="mailto:daniel.carter@carsdealership.example">daniel.carter@carsdealership.example</a>
         </div>
-      </div>
-
-      <div class="card" style="width: 30%;">
-        <img class="card-img-top" src="/static/person.png" alt="Card image">
+      </article>
+      <article class="team-card">
+        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=85" alt="Portrait of Olivia Bennett">
         <div class="card-body">
-          <p class="title">Person2</p>
-          <p>Person2 Title</p>
-          <p class="card-text">Some text that explains the person2 in about 2 short sentences</p>
-          <p>person2@example.com</p>
+          <h3 class="h5 mb-1">Olivia Bennett</h3>
+          <p class="role mb-2">Head of Customer Experience</p>
+          <p>Olivia manages customer support, dealer feedback, and service quality. She works with partner locations to make every customer interaction clear and helpful.</p>
+          <a href="mailto:olivia.bennett@carsdealership.example">olivia.bennett@carsdealership.example</a>
         </div>
-      </div>
-
-      <div class="card" style="width: 30%;">
-        <img class="card-img-top" src="/static/person.png" alt="Card image">
+      </article>
+      <article class="team-card">
+        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=900&q=85" alt="Portrait of Marcus Lee">
         <div class="card-body">
-          <p class="title">Person3</p>
-          <p>Person3 Title</p>
-          <p class="card-text">Some text that explains the person3 in about 2 short sentences</p>
-          <p>person3@example.com</p>
+          <h3 class="h5 mb-1">Marcus Lee</h3>
+          <p class="role mb-2">Technology &amp; Platform Director</p>
+          <p>Marcus oversees the digital platform, data services, and application reliability. He focuses on making dealership information accurate and easy to access.</p>
+          <a href="mailto:marcus.lee@carsdealership.example">marcus.lee@carsdealership.example</a>
         </div>
-      </div>
-    </div>
-    </div>
-    </div>
-    
-</div>
-
+      </article>
+    </section>
+    <section class="about-copy">
+      <h2 class="h4">Our mission</h2>
+      <p class="mb-0">Our mission is to help people make confident vehicle decisions by bringing dealership information and customer reviews together in one accessible platform. We value transparency, responsive service, and long-term relationships with drivers and dealer partners.</p>
+    </section>
+  </main>
+  <script src="/static/bootstrap.min.js"></script>
+</body>
 </html>
