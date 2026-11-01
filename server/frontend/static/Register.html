@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Register | Cars Dealership</title><link rel="stylesheet" href="/static/bootstrap.min.css"><link rel="stylesheet" href="/static/style.css"><style>body{background:#f3f6f8;font-family:Arial,sans-serif}.nav{background:#102b44;color:#fff;padding:18px 5%;display:flex;gap:26px}.nav a{color:white;text-decoration:none}.brand{font-weight:800;font-size:22px;margin-right:20px}.card{max-width:520px;margin:42px auto;background:white;padding:30px;border-radius:14px;box-shadow:0 6px 24px #0001}.field{display:flex;flex-direction:column;gap:7px;margin:13px 0}input{padding:11px;border:1px solid #bdcbd5;border-radius:7px}.btn{background:#087e8b;color:white;padding:12px;border:0;border-radius:7px;width:100%;font-weight:700}</style></head>
+<body><header class="nav"><span class="brand">Cars Dealership</span><a href="/">Home</a><a href="/about">About Us</a><a href="/contact">Contact Us</a></header>
+<main class="card"><h1>Sign Up</h1><form id="register-form">
+<div class="field"><label for="username">Username</label><input id="username" required></div>
+<div class="field"><label for="firstName">First Name</label><input id="firstName" required></div>
+<div class="field"><label for="lastName">Last Name</label><input id="lastName" required></div>
+<div class="field"><label for="email">Email</label><input id="email" type="email" required></div>
+<div class="field"><label for="password">Password</label><input id="password" type="password" required></div>
+<button class="btn">Register</button></form><p id="message" role="status"></p><p>Already registered? <a href="/login">Login</a></p></main>
+<script>
+document.getElementById("register-form").addEventListener("submit",async e=>{e.preventDefault();const data={userName:document.getElementById("username").value,firstName:document.getElementById("firstName").value,lastName:document.getElementById("lastName").value,email:document.getElementById("email").value,password:document.getElementById("password").value};const r=await fetch("/djangoapp/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});const d=await r.json();document.getElementById("message").textContent=d.message||d.error||(r.ok?"Registration successful":"Registration failed");if(r.ok){document.getElementById("register-form").reset();}});
+</script></body></html>
