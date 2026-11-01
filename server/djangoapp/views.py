@@ -1,5 +1,7 @@
 import json
 import logging
+import json
+from pathlib import Path
 import requests
 
 from django.contrib.auth import authenticate, login, logout
@@ -143,4 +145,17 @@ def get_cars(request):
         {"CarMake": car.make.name, "CarModel": car.name}
         for car in cars
     ]
+    if not car_models:
+        data_file = (
+            Path(__file__).resolve().parents[1]
+            / "database" / "data" / "car_records.json"
+        )
+        with data_file.open(encoding="utf-8") as handle:
+            records = json.load(handle).get("cars", [])
+        seen = set()
+        for car in records:
+            key = (car["make"], car["model"])
+            if key not in seen:
+                seen.add(key)
+                car_models.append({"CarMake": key[0], "CarModel": key[1]})
     return JsonResponse({"status": 200, "CarModels": car_models})
