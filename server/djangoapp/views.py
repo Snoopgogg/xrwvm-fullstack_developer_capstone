@@ -1,6 +1,5 @@
 import json
 import logging
-import json
 from pathlib import Path
 import requests
 
@@ -8,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import JsonResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import CarModel
@@ -159,3 +159,28 @@ def get_cars(request):
                 seen.add(key)
                 car_models.append({"CarMake": key[0], "CarModel": key[1]})
     return JsonResponse({"status": 200, "CarModels": car_models})
+
+
+# Browser page views used by the capstone UI.
+def home_page(request):
+    return render(request, "Home.html", {"initial_state": ""})
+
+
+def dealers_state_page(request, state):
+    return render(request, "Home.html", {"initial_state": state})
+
+
+def dealer_page(request, dealer_id):
+    return render(request, "Dealer.html", {"dealer_id": dealer_id})
+
+
+def post_review_page(request, dealer_id):
+    return render(request, "PostReview.html", {"dealer_id": dealer_id})
+
+
+def login_page(request):
+    return render(request, "Login.html")
+
+
+def register_page(request):
+    return render(request, "Register.html")
