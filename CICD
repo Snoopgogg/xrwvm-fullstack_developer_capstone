@@ -1,21 +1,39 @@
-Car Dealership Capstone CI
+GitHub Actions — Car Dealership Capstone CI
 Repository: Snoopgogg/xrwvm-fullstack_developer_capstone
-Workflow run: https://github.com/Snoopgogg/xrwvm-fullstack_developer_capstone/actions/runs/41356092006
-Commit: e232a143662ab74b451f75542834f07053bae2bd
-Final status: success
+Branch: main
+Run ID: 41357429529
+Run URL: https://github.com/Snoopgogg/xrwvm-fullstack_developer_capstone/actions/runs/41357429529
+Commit: 4b84791da44e66641c38b3b43b7f475f419119d3
+Overall conclusion: SUCCESS
 
-Steps executed:
-1. Set up job — success
-2. Checkout repository — success
-3. Set up Python 3.11.17 — success
-4. Install Python dependencies — success
-5. Compile Django application — success
-6. Run Django system checks — success
-   Output: System check identified no issues (0 silenced).
-7. Set up Node.js 20.20.2 — success
-8. Validate Node.js microservice syntax — success
-9. Workflow completed — success
-   Output: Car Dealership Capstone validation completed.
-10. Complete job — success
+JOB 1: Lint Python Files — SUCCESS
+  1. Set up job — success
+  2. Checkout code — success
+  3. Set up Python 3.11 — success
+  4. Install Linter (ruff) — success
+  5. Run Linter: ruff check server --select E9,F63,F7,F82 --output-format github — success
+  6. Post Run Linter — success
+  7. Complete job — success
 
-GitHub Actions conclusion: success
+JOB 2: Lint JavaScript Files — SUCCESS
+  1. Set up job — success
+  2. Checkout code — success
+  3. Set up Node.js 20 — success
+  4. Install JavaScript dependencies: npm install --no-audit --no-fund — success
+  5. Run Linter: CI=false npm run build — success
+  6. Validate Node.js API syntax (node --check app.js and model files) — success
+  7. Post Run Linter — success
+  8. Complete job — success
+
+JOB 3: Django Application Checks — SUCCESS
+  1. Set up job — success
+  2. Checkout code — success
+  3. Set up Python 3.11 — success
+  4. Install Django dependencies — success
+  5. Run Django checks — success
+     Output: System check identified no issues (0 silenced).
+  6. Apply database migrations (with sync for project models) — success
+  7. Populate the car catalogue — success
+  8. Complete job — success
+
+Final workflow result: SUCCESS
