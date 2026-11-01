@@ -1,0 +1,55 @@
+services:
+  mongo_db:
+    image: mongo:7
+    container_name: dealership-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: ./database
+    container_name: dealership-api
+    restart: unless-stopped
+    environment:
+      MONGODB_URL: mongodb://mongo_db:27017/
+      PORT: "3030"
+    depends_on:
+      mongo_db:
+        condition: service_healthy
+    ports:
+      - "3030:3030"
+
+  sentiment:
+    build:
+      context: ./djangoapp/microservices
+    container_name: dealership-sentiment
+    restart: unless-stopped
+    environment:
+      PORT: "5050"
+    ports:
+      - "5050:5050"
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dealership-django
+    restart: unless-stopped
+    environment:
+      PORT: "8000"
+      backend_url: http://api:3030
+      sentiment_analyzer_url: http://sentiment:5050
+    depends_on:
+      - api
+      - sentiment
+    ports:
+      - "8000:8000"
+
+volumes:
+  mongo_data:
