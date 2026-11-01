@@ -1,64 +1,100 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="static/style.css">
-  <link rel="stylesheet" href="static/bootstrap.min.css">
-<script>
-
-const logout = async (e) => {
-//Include the code for logout here.
-};
-
-let checkSession = ()=>{
-  let curr_user = sessionStorage.getItem("username");
-
-  if (curr_user && curr_user !== "") {
-    document.getElementById("loginlogout").innerHTML = 
-    '<span class="homepage_links">' + curr_user +'</span>' +
-    '<a class="homepage_links" onclick="logout()" href="/">Logout</a>'
-  } else {
-    document.getElementById("loginlogout").innerHTML = 
-    '<a class="homepage_links" href="/login">Login</a>'+
-    '<a class="homepage_links"  href="/register">Register</a>'
-  }
- }
-</script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cars Dealership</title>
+  <link rel="stylesheet" href="/static/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    body{margin:0;background:#f3f6f8;color:#203040;font-family:Arial,sans-serif}
+    .nav{background:#102b44;color:#fff;padding:18px 5%;display:flex;gap:28px;align-items:center}
+    .nav a{color:#eef8ff;text-decoration:none;font-weight:600}.brand{font-size:22px;font-weight:800;margin-right:20px}
+    .user{margin-left:auto;color:#a8f1eb;font-weight:700}.wrap{max-width:1240px;margin:28px auto;padding:0 20px}
+    .hero{background:linear-gradient(120deg,#143b5c,#137b82);color:white;border-radius:14px;padding:34px;margin-bottom:22px}
+    .hero h1{margin:0 0 8px;font-size:30px}.hero p{margin:0}
+    .panel{background:#fff;border:1px solid #dce4eb;border-radius:12px;padding:22px;margin-bottom:20px;box-shadow:0 3px 12px #162d4510}
+    .panel h2{margin:0 0 16px;color:#183852}.filters{display:flex;gap:14px;align-items:center;margin-bottom:15px;flex-wrap:wrap}
+    select{padding:9px 12px;border:1px solid #bac9d4;border-radius:6px;min-width:220px}
+    table{width:100%;border-collapse:collapse}th{background:#e8f1f5;text-align:left;color:#21415c}td,th{padding:13px;border-bottom:1px solid #e2e9ed}
+    tr:last-child td{border-bottom:0}a.dealer{font-weight:700;color:#126d80;text-decoration:none}
+    .badge{background:#e5f5f4;color:#087a73;border-radius:16px;padding:4px 10px;font-size:12px;font-weight:700}
+    .btn{background:#087e8b;color:white;padding:9px 14px;border-radius:7px;text-decoration:none;border:0;cursor:pointer;font-weight:700}
+    .btn.alt{background:#174a78}.muted{color:#657786}.footer{text-align:center;color:#6d7e8b;padding:26px;font-size:13px}
+    .login-panel{display:flex;gap:8px;align-items:center}
+  </style>
 </head>
-<body onload="checkSession()">
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color:darkturquoise; height: 1in;">
-  <div class="container-fluid">
-    <h2 style="padding-right: 5%;">Dealerships</h2>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarText">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" style="font-size: larger;" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" style="font-size: larger;" href="/about">About Us</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" style="font-size: larger;" href="/contact">Contact Us</a>
-        </li>
-      </ul>
-      <span class="navbar-text">
-        <div class="loginlink" id="loginlogout">
-        </div>
-        </span>
-    </div>
-  </div>
-</nav>
-<div style="display: flex;flex-direction: column;">
-<div class="card" style="width: 50%;margin-top: 50px;align-self: center;">
-  <img src="static/car_dealership.jpg" class="card-img-top" alt="...">
-  <div class="banner">
-    <h5>Welcome to our Dealerships!</h5>
-    <a href="/dealers" class="btn" style="background-color: aqua;margin:10px">View Dealerships</a>
-  </div>
-</div>
-</div>
+<body>
+  <header class="nav">
+    <span class="brand">🚘 Cars Dealership</span>
+    <a href="/">Home</a><a href="/about">About Us</a><a href="/contact">Contact Us</a>
+    <span class="user" id="session-user"></span><span class="login-panel" id="session-action"></span>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <h1>Welcome to Cars Dealership</h1>
+      <p>Find trusted dealerships, explore vehicle information, and read customer experiences.</p>
+    </section>
+    <section class="panel">
+      <h2>Dealership Directory</h2>
+      <div class="filters">
+        <label for="state-filter"><strong>Filter by State</strong></label>
+        <select id="state-filter"><option value="">All States</option></select>
+        <span class="muted" id="result-count">Loading dealerships…</span>
+      </div>
+      <div style="overflow:auto">
+        <table>
+          <thead><tr><th>ID</th><th>Dealer Name</th><th>City</th><th>Address</th><th>ZIP</th><th>State</th><th id="action-heading" hidden>Review Dealer</th></tr></thead>
+          <tbody id="dealer-rows"><tr><td colspan="7">Loading dealerships…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">Cars Dealership · Full Stack Development Capstone</footer>
+<script>
+const initialState = "{{ initial_state|default:''|escapejs }}";
+const user = sessionStorage.getItem("username") || "";
+const userNode = document.getElementById("session-user");
+const actionNode = document.getElementById("session-action");
+const actionHeading = document.getElementById("action-heading");
+if (user) {
+  userNode.textContent = "Signed in as " + user;
+  actionNode.innerHTML = '<a class="btn alt" href="#" id="logout-link">Logout</a>';
+  actionHeading.hidden = false;
+  document.getElementById("logout-link").addEventListener("click", async (event) => {
+    event.preventDefault();
+    await fetch("/djangoapp/logout");
+    sessionStorage.removeItem("username");
+    location.href = "/";
+  });
+} else {
+  actionNode.innerHTML = '<a class="btn alt" href="/login">Login</a><a class="btn" href="/register">Register</a>';
+}
+const stateFilter = document.getElementById("state-filter");
+if (initialState) stateFilter.value = initialState;
+stateFilter.addEventListener("change", () => {
+  location.href = stateFilter.value ? "/dealers/state/" + encodeURIComponent(stateFilter.value) : "/";
+});
+const endpoint = initialState ? "/djangoapp/get_dealers/" + encodeURIComponent(initialState) : "/djangoapp/get_dealers";
+fetch(endpoint).then(response => response.json()).then(data => {
+  const dealers = data.dealers || [];
+  const states = [...new Set(dealers.map(dealer => dealer.state))].sort();
+  states.forEach(state => {
+    if (![...stateFilter.options].some(option => option.value === state)) {
+      const option = document.createElement("option");
+      option.value = state; option.textContent = state; stateFilter.appendChild(option);
+    }
+  });
+  document.getElementById("result-count").textContent = dealers.length + " dealer(s) found";
+  document.getElementById("dealer-rows").innerHTML = dealers.map(dealer => {
+    const reviewLink = user ? '<td><a class="btn alt" href="/postreview/' + dealer.id + '">Review Dealer</a></td>' : "";
+    return '<tr><td>' + dealer.id + '</td><td><a class="dealer" href="/dealer/' + dealer.id + '">' + dealer.full_name +
+      '</a></td><td>' + dealer.city + '</td><td>' + dealer.address + '</td><td>' + dealer.zip +
+      '</td><td><span class="badge">' + dealer.state + '</span></td>' + reviewLink + '</tr>';
+  }).join("");
+}).catch(() => {
+  document.getElementById("dealer-rows").innerHTML = '<tr><td colspan="7">Could not load dealers. Check that the Node API is running.</td></tr>';
+  document.getElementById("result-count").textContent = "API unavailable";
+});
+</script>
 </body>
 </html>
